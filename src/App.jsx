@@ -57,8 +57,8 @@ function App() {
 
       <Nav
         data={content}
-        onChangeMode={(id) => {
-          set('read');
+        onChangeMode={(_id) => {
+          setMode('read');
           setId(_id);
         }}
       />
