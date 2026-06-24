@@ -4,7 +4,7 @@ import Nav from './components/Nav';
 import MyArticle from './components/MyArticle';
 import { useState, useCallback, useMemo } from 'react';
 import Controls from './components/controls';
-import CreateArticle from './components/createArticle';
+import CreateArticle from './components/CreateArticle';
 import UpdateArticle from './components/UpdateArticle';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -75,10 +75,10 @@ function App() {
   } else if (mode === 'create') {
     _article = (
       <CreateArticle
-        onSubmit={(_title, _desc) => {
+        onSubmit={(_title, _desc, _level) => {
           const newId = uuidv4();
 
-          let _contents = content.concat({ id: newId, title: _title, desc: _desc });
+          let _contents = content.concat({ id: newId, title: _title, desc: _desc, level: _level });
           setContent(_contents);
           // setMaxid(newId);
           setId(newId);
