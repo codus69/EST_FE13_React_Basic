@@ -63,6 +63,7 @@ function App() {
     setMode('read');
     setId(_id);
   }, []);
+
   return (
     <>
       <Myheader
@@ -83,13 +84,7 @@ function App() {
         </h1>
         <p>{subject.desc}</p>
       </header> */}
-      <Nav
-        data={content}
-        onChangeMode={(_id) => {
-          setMode('read');
-          setId(_id);
-        }}
-      />
+      <Nav data={content} onChangeMode={handleChangeMode} />
       {_article}
       <hr />
       <Controls
