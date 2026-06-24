@@ -2,7 +2,7 @@ import './App.css';
 import Myheader from './components/Myheader';
 import Nav from './components/Nav';
 import MyArticle from './components/MyArticle';
-import { useState } from 'react';
+import { useState, useCallback } from 'react';
 import Controls from './components/controls';
 import CreateArticle from './components/CreateArticle';
 
@@ -52,10 +52,17 @@ function App() {
           let _contents = content.concat({ id: newId, title: _title, desc: _desc });
           setContent(_contents);
           setMaxid(newId);
+          setId(newId);
+          setMode('read');
         }}
       />
     );
   }
+
+  const handleChangeMode = useCallback((_id) => {
+    setMode('read');
+    setId(_id);
+  }, []);
   return (
     <>
       <Myheader
