@@ -51,67 +51,64 @@ function App() {
     }
   };
 
-  if (mode === 'welcome') {
-    _title = welcome.title;
-    _desc = welcome.desc;
-    _article = <MyArticle title={_title} desc={_desc} />;
-  } else if (mode === 'read') {
-    if (selectedArticle) {
-      _title = selectedArticle.title;
-      _desc = selectedArticle.desc;
-      _level = selectedArticle.level;
+  const handleSubmitCreate = (_title, _desc, _level) => {
+    const newId = uuidv4();
+
+    let _contents = content.concat({ id: newId, title: _title, desc: _desc, level: _level });
+    setContent(_contents);
+    // setMaxid(newId);
+    setId(newId);
+    setMode('read');
+  };
+
+  const handleSubmitUpdate = (_title, _desc, _level) => {
+    setContent((prev) =>
+      prev.map((p) =>
+        p.id === id
+          ? {
+              ...p,
+              title: _title,
+              desc: _desc,
+              level: _level,
+            }
+          : p,
+      ),
+    );
+    setMode('read');
+  };
+
+  const renderArticle = () => {
+    switch (mode) {
+      case 'read':
+        return (
+          <MyArticle
+            title={selectedArticle?.title ?? welcome.title}
+            desc={selectedArticle?.desc ?? welcome.desc}
+            level={selectedArticle?.level ?? welcome.level}
+            onChangeMode={() => {
+              setMode('update');
+            }}
+            onDelete={handleDelete}
+          />
+        );
+
+      case 'create':
+        return <CreateArticle onSubmit={handleSubmitCreate} />;
+
+      case 'update':
+        return (
+          <UpdateArticle
+            title={selectedArticle.title}
+            desc={selectedArticle.desc}
+            level={selectedArticle.level}
+            onSubmit={handleSubmitUpdate}
+          />
+        );
+
+      default: //welcome
+        return <MyArticle title={welcome.title} desc={welcome.desc} />;
     }
-    _article = (
-      <MyArticle
-        title={_title}
-        desc={_desc}
-        level={_level}
-        onChangeMode={() => {
-          setMode('update');
-        }}
-        onDelete={handleDelete}
-      />
-    );
-  } else if (mode === 'create') {
-    _article = (
-      <CreateArticle
-        onSubmit={(_title, _desc, _level) => {
-          const newId = uuidv4();
-
-          let _contents = content.concat({ id: newId, title: _title, desc: _desc, level: _level });
-          setContent(_contents);
-          // setMaxid(newId);
-          setId(newId);
-          setMode('read');
-        }}
-      />
-    );
-  } else if (mode === 'update') {
-    if (!selectedArticle) return null;
-
-    _article = (
-      <UpdateArticle
-        title={selectedArticle.title}
-        desc={selectedArticle.desc}
-        level={selectedArticle.level}
-        onSubmit={(_title, _desc, _level) => {
-          setContent((prev) =>
-            prev.map((p) =>
-              p.id === id
-                ? {
-                    ...p,
-                    title: _title,
-                    desc: _desc,
-                    level: _level,
-                  }
-                : p,
-            ),
-          );
-          setMode('read');
-        }}
-      />
-    );
-  }
+  };
 
   const handleChangeMode = useCallback((_id) => {
     console.log(_id);
@@ -141,7 +138,7 @@ function App() {
         <p>{subject.desc}</p>
       </header> */}
       <Nav data={content} onChangeMode={handleChangeMode} />
-      {_article}
+      {renderArticle()}
       <hr />
       <Controls
         onChangeMode={() => {
